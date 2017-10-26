@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.crashlytics.android.Crashlytics
 import info.dvkr.screenstream.BuildConfig
 import info.dvkr.screenstream.ScreenStreamApp
 import info.dvkr.screenstream.model.Settings
@@ -16,7 +15,6 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (BuildConfig.DEBUG_MODE) Log.w("BootReceiver", "Thread [${Thread.currentThread().name}] onReceive")
-        Crashlytics.log(1, "BootReceiver", "onReceive")
         (context.applicationContext as ScreenStreamApp).appComponent().plusActivityComponent().inject(this)
 
         if (!settings.startOnBoot) System.exit(0)

@@ -17,7 +17,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.crashlytics.android.Crashlytics
 import com.jakewharton.rxrelay.PublishRelay
 import com.jrummyapps.android.colorpicker.ColorPickerDialog
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
@@ -55,7 +54,6 @@ class SettingsActivity : BaseActivity(), SettingsActivityView, ColorPickerDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onCreate: Start")
-        Crashlytics.log(1, TAG, "onCreate: Start")
 
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val defaultDisplay = windowManager.defaultDisplay
@@ -194,7 +192,6 @@ class SettingsActivity : BaseActivity(), SettingsActivityView, ColorPickerDialog
         }
 
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onCreate: End")
-        Crashlytics.log(1, TAG, "onCreate: End")
     }
 
     override fun inject(injector: NonConfigurationComponent) = injector.inject(this)
@@ -204,7 +201,6 @@ class SettingsActivity : BaseActivity(), SettingsActivityView, ColorPickerDialog
         dialog?.let { if (it.isShowing) it.dismiss() }
         presenter.detach()
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onDestroy: End")
-        Crashlytics.log(1, TAG, "onDestroy: End")
         super.onDestroy()
     }
 

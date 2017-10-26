@@ -3,13 +3,10 @@ package info.dvkr.screenstream
 import android.app.Application
 import android.os.StrictMode
 import android.util.Log
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.core.CrashlyticsCore
 import com.squareup.leakcanary.LeakCanary
 import info.dvkr.screenstream.dagger.component.AppComponent
 import info.dvkr.screenstream.dagger.component.DaggerAppComponent
 import info.dvkr.screenstream.dagger.module.AppModule
-import io.fabric.sdk.android.Fabric
 
 
 class ScreenStreamApp : Application() {
@@ -46,18 +43,9 @@ class ScreenStreamApp : Application() {
         }
         LeakCanary.install(this)
 
-        // Set up Crashlytics, disabled for debug builds
-        val crashlyticsKit = Crashlytics.Builder()
-                .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build()
-
-        // Initialize Fabric with the debug-disabled crashlytics.
-        Fabric.with(this, crashlyticsKit)
-
         appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
 
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onCreate: End")
-        Crashlytics.log(1, TAG, "onCreate")
     }
 
     fun appComponent(): AppComponent = appComponent

@@ -2,7 +2,6 @@ package info.dvkr.screenstream.model.image
 
 import android.content.Context
 import android.graphics.*
-import com.crashlytics.android.Crashlytics
 import info.dvkr.screenstream.R
 import info.dvkr.screenstream.model.ImageNotify
 import java.io.ByteArrayOutputStream
@@ -29,7 +28,6 @@ class ImageNotifyImpl(context: Context) : ImageNotify {
 
     override fun getImage(imageType: String): ByteArray {
         println(TAG + ": Thread [" + Thread.currentThread().name + "] getImage: " + imageType)
-        Crashlytics.log(1, TAG, "getImage: $imageType")
 
         return when (imageType) {
             ImageNotify.IMAGE_TYPE_DEFAULT -> imageDefault

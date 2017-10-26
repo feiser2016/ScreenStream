@@ -1,6 +1,5 @@
 package info.dvkr.screenstream.presenter
 
-import com.crashlytics.android.Crashlytics
 import info.dvkr.screenstream.BuildConfig
 import info.dvkr.screenstream.dagger.PersistentScope
 import info.dvkr.screenstream.model.EventBus
@@ -21,12 +20,10 @@ class StartActivityPresenter @Inject internal constructor(private val eventSched
 
     init {
         if (BuildConfig.DEBUG_MODE) println(TAG + ": Thread [${Thread.currentThread().name}] Constructor")
-        Crashlytics.log(1, TAG, "Constructor")
     }
 
     fun attach(activity: StartActivityView) {
         if (BuildConfig.DEBUG_MODE) println(TAG + ": Thread [${Thread.currentThread().name}] Attach")
-        Crashlytics.log(1, TAG, "Attach")
 
         startActivity?.let { detach() }
         startActivity = activity
@@ -131,7 +128,6 @@ class StartActivityPresenter @Inject internal constructor(private val eventSched
 
     fun detach() {
         if (BuildConfig.DEBUG_MODE) println(TAG + ": Thread [${Thread.currentThread().name}] Detach")
-        Crashlytics.log(1, TAG, "Detach")
         subscriptions.clear()
         startActivity = null
     }

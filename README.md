@@ -1,8 +1,7 @@
 # Screen Stream over HTTP
 An Android mobile app for viewing device screen in your web browser.
 
-This is a release branch available in Google Play Market<br>
-<a href='https://play.google.com/store/apps/details?id=info.dvkr.screenstream&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height="100" width="258" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+**This release branch is Fabric-free**<br>
 
 The application allows viewing the device screen in your web browser.
 The main idea is to show your device screen during presentations and demos.
@@ -56,7 +55,6 @@ Version 2.x based on MVP architecture pattern and uses:
 * [Binary Preferences](https://github.com/iamironz/binaryprefs)
 * [Color Picker](https://github.com/jrummyapps/colorpicker)
 * [GraphView](https://github.com/appsthatmatter/GraphView)
-* [Crashlytics](https://try.crashlytics.com/)
 * [LeakCanary](https://github.com/square/leakcanary)
 
 

@@ -13,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import com.crashlytics.android.Crashlytics
 import com.jakewharton.rxrelay.PublishRelay
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -86,9 +85,7 @@ class StartActivity : BaseActivity(), StartActivityView {
                     if (event.running && settings.minimizeOnStream)
                         try {
                             startActivity(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                        } catch (ex: ActivityNotFoundException) {
-                            Crashlytics.log(1, TAG, "OnStreamStartStop: minimizeOnStream: ActivityNotFoundException")
-                            Crashlytics.logException(ex)
+                        } catch (ignore: ActivityNotFoundException) {
                         }
                 }
 
@@ -162,7 +159,6 @@ class StartActivity : BaseActivity(), StartActivityView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onCreate: Start")
-        Crashlytics.log(1, TAG, "onCreate: Start")
 
         setContentView(R.layout.activity_start)
         setSupportActionBar(toolbarStart)
@@ -234,7 +230,6 @@ class StartActivity : BaseActivity(), StartActivityView {
         onNewIntent(intent)
 
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onCreate: End")
-        Crashlytics.log(1, TAG, "onCreate: End")
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -247,7 +242,6 @@ class StartActivity : BaseActivity(), StartActivityView {
         intent.removeExtra(EXTRA_DATA)
         this.intent = intent
 
-        Crashlytics.log(1, TAG, "Action: $action")
         when (action) {
             ACTION_START_STREAM -> {
                 if (!canStart) return
@@ -285,7 +279,6 @@ class StartActivity : BaseActivity(), StartActivityView {
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onDestroy: Start")
         presenter.detach()
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onDestroy: End")
-        Crashlytics.log(1, TAG, "onDestroy: End")
         super.onDestroy()
     }
 
@@ -303,7 +296,6 @@ class StartActivity : BaseActivity(), StartActivityView {
                             .enableSwipeToDismiss()
                             .show()
                     if (BuildConfig.DEBUG_MODE) Log.w(TAG, "onActivityResult: Screen Cast permission denied")
-                    Crashlytics.log(1, TAG, "onActivityResult: Screen Cast permission denied")
                     return
                 }
 
@@ -311,7 +303,6 @@ class StartActivity : BaseActivity(), StartActivityView {
                     toggleButtonStartStop.isEnabled = true
                     if (BuildConfig.DEBUG_MODE) Log.e(TAG, "onActivityResult ERROR: data = null")
                     val error = IllegalStateException("onActivityResult: data = null")
-                    Crashlytics.logException(error)
                     fromEvents.call(StartActivityView.FromEvent.Error(error))
                     return
                 }

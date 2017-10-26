@@ -1,7 +1,6 @@
 package info.dvkr.screenstream.model.httpserver
 
 
-import com.crashlytics.android.Crashlytics
 import com.jakewharton.rxrelay.BehaviorRelay
 import info.dvkr.screenstream.BuildConfig
 import info.dvkr.screenstream.model.HttpServer
@@ -48,7 +47,6 @@ internal class HttpServerRxHandler(private val favicon: ByteArray,
 
     init {
         if (BuildConfig.DEBUG_MODE) println(TAG + ": Thread [${Thread.currentThread().name}] HttpServerRxHandler: Create")
-        Crashlytics.log(1, TAG, "HttpServerRxHandler: Create")
 
         singleThreadExecutor.submit {
             Thread.currentThread().priority = 8
@@ -63,7 +61,6 @@ internal class HttpServerRxHandler(private val favicon: ByteArray,
 
     fun stop() {
         if (BuildConfig.DEBUG_MODE) println(TAG + ": Thread [${Thread.currentThread().name}] HttpServerRxHandler: Stop")
-        Crashlytics.log(1, TAG, "HttpServerRxHandler: Stop")
 
         subscription?.unsubscribe()
         singleThreadExecutor.shutdown()

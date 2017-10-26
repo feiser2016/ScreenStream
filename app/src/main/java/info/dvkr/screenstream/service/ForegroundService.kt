@@ -20,7 +20,6 @@ import android.view.LayoutInflater
 import android.widget.RemoteViews
 import android.widget.Toast
 import com.cantrowitz.rxbroadcast.RxBroadcast
-import com.crashlytics.android.Crashlytics
 import com.jakewharton.rxrelay.BehaviorRelay
 import com.jakewharton.rxrelay.PublishRelay
 import info.dvkr.screenstream.BuildConfig
@@ -116,7 +115,6 @@ class ForegroundService : Service(), ForegroundServiceView {
 
     override fun onCreate() {
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onCreate: Start")
-        Crashlytics.log(1, TAG, "onCreate: Start")
 
         val tetherId = Resources.getSystem().getIdentifier("config_tether_wifi_regexs", "array", "android")
         wifiRegexArray = resources.getStringArray(tetherId).map { it.toRegex() }.toTypedArray()
@@ -171,8 +169,7 @@ class ForegroundService : Service(), ForegroundServiceView {
                             baseIndexHtml,
                             basePinRequestHtml,
                             pinRequestErrorMsg,
-                            jpegBytesStream.onBackpressureBuffer(2,
-                                    Action0 { Crashlytics.log(1, TAG, "jpegBytesStream.onBackpressureBuffer - ON_OVERFLOW_DROP_OLDEST") },
+                            jpegBytesStream.onBackpressureBuffer(2, Action0 { },
                                     BackpressureOverflow.ON_OVERFLOW_DROP_OLDEST))
                     )
                 }
@@ -204,7 +201,6 @@ class ForegroundService : Service(), ForegroundServiceView {
                     projectionCallback = object : MediaProjection.Callback() {
                         override fun onStop() {
                             if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] ProjectionCallback")
-                            Crashlytics.log(1, TAG, "ProjectionCallback: onStop")
                             eventBus.sendEvent(EventBus.GlobalEvent.StopStream())
                         }
                     }
@@ -229,7 +225,6 @@ class ForegroundService : Service(), ForegroundServiceView {
 
                 is ForegroundServiceView.ToEvent.Error -> {
                     if (BuildConfig.DEBUG_MODE) Log.e(TAG, event.error.toString())
-                    Crashlytics.logException(event.error)
                     globalStatus.error.set(event.error)
                     startActivity(StartActivity.getStartIntent(applicationContext, StartActivity.ACTION_ERROR).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 }
@@ -267,7 +262,6 @@ class ForegroundService : Service(), ForegroundServiceView {
         connectionEvents.throttleWithTimeout(500, TimeUnit.MILLISECONDS, eventScheduler)
                 .skip(1)
                 .subscribe { _ ->
-                    Crashlytics.log(1, TAG, "connectionEvents")
                     if (settings.useWiFiOnly) {
                         counterStartHttpServer = 0
                         fromEvents.call(ForegroundServiceView.FromEvent.HttpServerRestartRequest())
@@ -278,7 +272,6 @@ class ForegroundService : Service(), ForegroundServiceView {
 
         startForeground(NOTIFICATION_START_STREAMING, getCustomNotification(NOTIFICATION_START_STREAMING))
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onCreate: End")
-        Crashlytics.log(1, TAG, "onCreate: End")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -289,11 +282,9 @@ class ForegroundService : Service(), ForegroundServiceView {
         val action = intent.getStringExtra(EXTRA_DATA)
         if (null == action) {
             if (BuildConfig.DEBUG_MODE) Log.e(TAG, "onStartCommand: action == null")
-            Crashlytics.logException(IllegalStateException(TAG + " onStartCommand: action == null"))
             return Service.START_NOT_STICKY
         }
 
-        Crashlytics.log(1, TAG, "onStartCommand: $action")
         when (action) {
             ACTION_INIT -> if (!isForegroundServiceInit) {
                 fromEvents.call(ForegroundServiceView.FromEvent.Init())
@@ -325,7 +316,6 @@ class ForegroundService : Service(), ForegroundServiceView {
 
         super.onDestroy()
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] onDestroy: End")
-        Crashlytics.log(1, TAG, "onDestroy: End")
         System.exit(0)
     }
 
@@ -333,7 +323,6 @@ class ForegroundService : Service(), ForegroundServiceView {
 
     private fun stopMediaProjection() {
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] stopMediaProjection")
-        Crashlytics.log(1, TAG, "stopMediaProjection")
         mediaProjection?.apply {
             projectionCallback?.let { unregisterCallback(it) }
         }
@@ -450,7 +439,6 @@ class ForegroundService : Service(), ForegroundServiceView {
 
     private fun getInterfaces(): List<ForegroundServiceView.Interface> {
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] getInterfaces")
-        Crashlytics.log(1, TAG, "getInterfaces")
         val interfaceList = ArrayList<ForegroundServiceView.Interface>()
         try {
             val enumeration = NetworkInterface.getNetworkInterfaces()
@@ -473,7 +461,6 @@ class ForegroundService : Service(), ForegroundServiceView {
             }
         } catch (ex: Throwable) {
             if (BuildConfig.DEBUG_MODE) Log.e(TAG, ex.toString())
-            Crashlytics.log(1, TAG, "getInterfaces: $ex")
             if (wifiConnected()) interfaceList.add(ForegroundServiceView.Interface("wlan0", getWiFiIpAddress()))
         }
         return interfaceList
@@ -483,7 +470,6 @@ class ForegroundService : Service(), ForegroundServiceView {
 
     private fun getWiFiIpAddress(): Inet4Address {
         if (BuildConfig.DEBUG_MODE) Log.w(TAG, "Thread [${Thread.currentThread().name}] getWiFiIpAddress")
-        Crashlytics.log(1, TAG, "getWiFiIpAddress")
         val ipInt = wifiManager.connectionInfo.ipAddress
         return InetAddress.getByAddress(ByteArray(4, { i -> (ipInt.shr(i * 8).and(255)).toByte() })) as Inet4Address
     }

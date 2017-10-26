@@ -3,7 +3,6 @@ package info.dvkr.screenstream.dagger.module
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
-import com.crashlytics.android.Crashlytics
 import com.ironz.binaryprefs.BinaryPreferencesBuilder
 import dagger.Module
 import dagger.Provides
@@ -25,7 +24,6 @@ class SettingsModule {
                 .exceptionHandler {
                     it?.let {
                         if (BuildConfig.DEBUG_MODE) Log.e("BinaryPreferences", it.toString())
-                        Crashlytics.logException(it)
                     }
                 }
                 .build()
