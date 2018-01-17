@@ -1,7 +1,9 @@
 # Screen Stream over HTTP
 An Android mobile app for viewing device screen in your web browser.
 
-**This release branch is Fabric-free**<br>
+**This branch is closed.<br>Use master branch with Fabric-free build variant.**<br>
+
+This release branch is Fabric-free<br>
 
 The application allows viewing the device screen in your web browser.
 The main idea is to show your device screen during presentations and demos.
